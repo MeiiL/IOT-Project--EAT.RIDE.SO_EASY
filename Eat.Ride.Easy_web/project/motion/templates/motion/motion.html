@@ -1,0 +1,207 @@
+{% load static %} 
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Host Two Template</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+        <!--<link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,200,300,600,700' rel='stylesheet' type='text/css'>-->
+        <link rel="stylesheet" href="{% static 'css/fonticons.css' %}">
+        <link rel="stylesheet" href="{% static 'fonts/stylesheet.css' %}">
+        <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <!--        <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css">-->
+
+<!--        <script src="http://maps.google.com/maps/api/js"></script>-->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+        <!--For Plugins external css-->
+        <link rel="stylesheet" href="{% static 'css/plugins.css' %}" />
+
+        <!--Theme custom css -->
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+        <!--Theme Responsive css-->
+        <link rel="stylesheet" href="{% static 'css/responsive.css' %}" />
+
+        <script src="{% static 'js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' %}"></script>
+    </head>
+    <body data-spy="scroll" data-target="#navmenu">
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+		
+		<div class='preloader'><div class='loaded'>&nbsp;</div></div>
+        <!--Home page style-->
+
+        <header id="main_menu" class="header navbar-fixed-top">            
+            <div class="main_menu_bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="nave_menu">
+                            <nav class="navbar navbar-default" id="#navmenu">
+                                <div class="container-fluid">
+                                    <!-- Brand and toggle get grouped for better mobile display -->
+                                    <div class="navbar-header ">
+                                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                            <span class="sr-only">Toggle navigation</span>
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                        </button>
+                                        <a class="nav navbar-nav navbar-left " href="#home">
+                                            <h2 class="font-color">Eat.Ride.Easy</h2>
+                                        </a>
+                                    </div>
+
+                                    <!-- Collect the nav links, forms, and other content for toggling -->
+
+
+
+                                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                                        <ul class="nav navbar-nav navbar-right">
+                                            <li><a href="/homepage/">Home</a></li>
+                                            <li><a href="#about">About</a></li>
+                                            <li><a href="#howitwork">Choose Your Appetite</a></li>
+                                            <li><a href="#bigidea">Journey Start</a></li>
+                                            
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </nav>
+                        </div>	
+                    </div>
+
+                </div>
+
+            </div>
+        </header> <!--End of header -->
+<section id="home" class="home">
+            <div class="home_overlay">
+                <div class="container">
+                    <div class="row">
+                        <div class="main_slider_area">
+                            <div class="slider">
+                                <div class="single_slider">
+                                    <h2>Fitness with Bike <span>/</span></h2>
+                                    <p>Yes you can  <span class="slash">/</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- End of Banner Section -->
+<!-- Kibana start -->
+        <section id="summer" class="summer">
+            <div class="container">
+                <div class="row">
+                    <div class="main_summer_area">
+                        <div class="single_summer">
+
+                        <div class="col-sm-12 no-padding">
+                            <div class="single_right_first_fitness">
+                                <div class="single_right_first_fitness_img">
+                                    <iframe src="/motion/gmap/" width=100% height=460px ></iframe>
+                                </div>
+                            </div>
+                        </div>
+                            <div class="col-sm-9 no-padding">
+                                <div class="single_summer_item_right">
+                                    <div class="single_summer_item_img_right">
+                                        <div class="single_summer_item_top_content_c">
+                                        <p class="s_item_content_left">Keeping Track on Your Speed <i class="lnr lnr-bicycle"></i></p>
+                                    </div>
+                                        <iframe src="http://localhost:5601/app/kibana#/dashboard/412ece60-fa00-11e7-aab9-ad1ab3870d77?embed=true&_g=()" height="300" width=100% scrolling="no" zoom=80%></iframe>
+                                    </div>
+                                 
+
+                                </div>
+                            </div>
+                            <div class="col-sm-3 no-padding">
+                                <div class="single_summer_item_right">
+                                    <div class="single_summer_item_img_right">
+                                        <div class="single_summer_item_top_content_c">
+                                        <p class="s_item_content_right">Current Speed <i class="lnr lnr-flag"></i></p>
+                                        </div>
+                                        <iframe src="http://localhost:5601/app/kibana#/dashboard/1b125d80-f9fd-11e7-aab9-ad1ab3870d77?embed=true&_g=()" height="300" width=100% scrolling="no" zoom=80%></iframe>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="col-sm-12 no-padding">
+                                <div class="single_summer_item_right">
+                                    <div class="single_summer_item_top_content_c">
+                                        <p class="s_item_content_left">
+                                            Maintaing Healthy Heart Beat
+                                        <span class="icon"><i class="lnr lnr-heart-pulse"></i></span>
+                                        </p>
+                                    </div>
+                                    <div class="single_summer_item_img_right">
+                                        <iframe src="http://localhost:5601/app/kibana#/dashboard/253bcf40-fa6f-11e7-b22a-6d8a45fe113b?embed=true&_g=()" height="250" width=100% scrolling="no"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 no-padding">
+                                <div class="single_summer_item_right">
+                                    <div class="single_summer_item_top_content_c">
+                                        <p class="s_item_content_left">
+                                            How Far Have You Been Riding <span class="icon"><i class="lnr lnr-drop"></i></span>
+                                        </p>
+                                    </div>
+                                    <div class="single_summer_item_img_right">
+                                        <iframe src="http://localhost:5601/app/kibana#/dashboard/d2f1bef0-f9fd-11e7-aab9-ad1ab3870d77?embed=true&_g=()" height=250px width=100% scrolling="no"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+<!-- Kibana end -->
+        <footer id="footer" class="footer">
+            <div class="container">
+                <div class="row">
+
+
+
+                    <div class="main_footer text-center">
+                        <p>Made with <i class="fa fa-heart"></i> by <a >BB104 Group3</a>2018. All Rights Reserved</p>
+                    </div>
+                </div>
+            </div>
+        </footer><!-- End of footer section -->
+
+        <!-- STRAT SCROLL TO TOP -->
+
+        <div class="scrollup">
+            <a href="#"><i class="fa fa-chevron-up"></i></a>
+        </div>
+
+        <script src="{% static 'js/vendor/jquery-1.11.2.min.js' %}"></script>
+        <script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
+        <script src="{% static 'js/vendor/isotope.min.js' %}"></script>
+
+        <script src="{% static 'js/jquery.easypiechart.min.js' %}"></script>
+        <script src="{% static 'js/jquery.mixitup.min.js' %}"></script>
+        <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+<!--        <script src="http://maps.google.com/maps/api/js' %}"></script>-->
+        <script src="{% static 'js/gmaps.min.js' %}"></script>
+
+        <script src="{% static 'js/plugins.js' %}"></script>
+        <script src="{% static 'js/main.js' %}"></script>
+
+    </body>
+</html>

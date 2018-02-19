@@ -1,0 +1,433 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<!--      <meta http-equiv="refresh" content="5">-->
+      <script src="http://maps.google.com/maps/api/js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+      </head>
+<body>
+<div id="map" style="width: 100%; height: 400px;"></div>
+                                    <script>
+        downhillGentleArray = [[],[]];//-1  0  ..1  
+        downhillBumpyArray = [[],[]]; //-1  1  ..2 
+        flatGentleArray = [[],[]];    // 0  0  ..3 
+        flatBumpyArray = [[],[]];     // 0  1  ..4 
+        uphillGentleArray = [[],[]];  // 1  0  ..5 
+        uphillBumpyArray = [[],[]];   // 1  1  ..6 
+        temp = {};
+        temp.lat = 1;
+{% for data in datas %}
+    var tempDisc = {};
+    var disc = {};
+    if({{data.lat}} > 0){
+       disc.lat={{data.lat}};
+       disc.lng={{data.lng}};
+       disc.Motion_Label={{data.Motion_Label}};
+       disc.Bumpy_Label={{data.Bumpy_Label}};
+    }
+    else{
+        disc.lat=temp.lat;
+        disc.lng=temp.lng;
+        disc.Motion_Label={{data.Motion_Label}};
+        disc.Bumpy_Label={{data.Bumpy_Label}};
+    }
+    switch (disc.Motion_Label) {
+            case -1:
+                disc.Motion_Label += 2;
+                break;
+            case 0:
+                disc.Motion_Label += 3;
+                break;
+            case 1:
+                disc.Motion_Label += 4;
+                break;
+        }
+        tempDisc.lat = temp.lat;
+        tempDisc.lng = temp.lng;
+    if (1==temp.lat){
+        temp.lat=disc.lat;
+        temp.lng=disc.lng;
+        temp.Motion_Label=disc.Motion_Label;
+        temp.Bumpy_Label=disc.Bumpy_Label;                                                            
+    }
+    var lastLabel = temp.Motion_Label + temp.Bumpy_Label;
+
+    switch (disc.Motion_Label+disc.Bumpy_Label) {
+        case 1:
+            {
+                if(1==lastLabel){
+                    downhillGentleArray[downhillGentleArray.length-1].push(disc);
+                }else{
+                    downhillGentleArray.push([tempDisc,disc]);
+                }
+            }
+            break;
+        case 2:
+            {
+                if(2==lastLabel){
+                    downhillBumpyArray[downhillBumpyArray.length-1].push(disc);
+                }else{
+                    downhillBumpyArray.push([tempDisc,disc]);
+                }
+            }
+            break;
+        case 3:
+            {
+                if(3==lastLabel){
+                    flatGentleArray[flatGentleArray.length-1].push(disc);
+                }else{
+                    flatGentleArray.push([tempDisc,disc]);
+                }
+            }
+            break;
+        case 4:
+            {
+                if(4==lastLabel){
+                    flatBumpyArray[flatBumpyArray.length-1].push(disc);
+                }else{
+                    flatBumpyArray.push([tempDisc,disc]);
+                }
+            }
+            break;
+        case 5:
+            {
+                if(5==lastLabel){
+                    uphillGentleArray[uphillGentleArray.length-1].push(disc);
+                }else{
+                    uphillGentleArray.push([tempDisc,disc]);
+                }
+            }
+            break;
+        case 6:
+            {
+                if(6==lastLabel){
+                    uphillBumpyArray[uphillBumpyArray.length-1].push(disc);
+                }else{
+                    uphillBumpyArray.push([tempDisc,disc]);
+                }
+            }
+            break;
+        default :
+            break;
+    }
+    temp.lat=disc.lat;
+    temp.lng=disc.lng;
+    temp.Motion_Label=disc.Motion_Label;
+    temp.Bumpy_Label=disc.Bumpy_Label;
+{% endfor %}
+
+supplyPoints = [];
+{% for supplyPoint in supply_points %}
+
+    var tags = [];
+    {% for tag in supplyPoint.tag %}
+    var tag = "{{tag}}";
+        tags.push(tag);
+    {% endfor %}
+    SPname = "{{supplyPoint.name}}";
+    SPadd = "{{supplyPoint.add}}";
+    SPtel = "{{supplyPoint.tel}}";
+    SPrat = "{{supplyPoint.rating}}";
+    SPexp = "{{supplyPoint.avg_exp}}";
+    SPlat = {{supplyPoint.latitude}};
+    SPlng = {{supplyPoint.longitude}};
+    SPurl = "{{supplyPoint.url}}";
+
+    supplyPoints.push({
+        "name": SPname, 
+        "add": SPadd, 
+        "tel": SPtel, 
+        "rating": SPrat, 
+        "avg_exp": SPexp, 
+        "lat": SPlat,
+        "lng": SPlng,
+        "url": SPurl,
+        "tag": tags
+    });
+ {% endfor %}
+ console.log(supplyPoints);
+ function initMap() {
+         map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 18,
+          center: {lat: temp.lat, lng: temp.lng},
+          mapTypeId: 'roadmap'
+        });
+        
+        var nowPosition = new google.maps.Marker({
+          position: {lat: temp.lat, lng: temp.lng},
+          map: map,          
+        });
+
+//for(i = 0;i < supplyPoints.length;i++){
+//    var marker = new google.maps.Marker({position: {lat: supplyPoints[i].lat, lng: supplyPoints[i].lng},map: map,});
+//        var contentString = '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="firstHeading" class="firstHeading">' + supplyPoints[0].name + '</h1>'+'<div id="bodyContent">'+'<p><b>Rate : ' + supplyPoints[i].rating + '</b><br/>Average Price : ' + supplyPoints[i].avg_exp + '<br/>Tel : ' + supplyPoints[i].tel + '<br/>Address : ' + supplyPoints[i].add +'<br/>       ' + supplyPoints[i].url +  '<br/>Tag: ' + supplyPoints[i].tag + '<br/></p>' + '</div>'+'</div>';
+//            marker.addListener('click', function() {new google.maps.InfoWindow({content: contentString}).open(map,marker);});
+//}
+     
+if(0 < supplyPoints.length){
+    var marker = new google.maps.Marker({position: {lat: supplyPoints[0].lat, lng: supplyPoints[0].lng},map: map,});
+            var contentString = '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="firstHeading" class="firstHeading">' + supplyPoints[0].name + '</h1>'+'<div id="bodyContent">'+'<p><b>Rate : ' + supplyPoints[0].rating + '</b><br/>Average Price : ' + supplyPoints[0].avg_exp + '<br/>Tel : ' + supplyPoints[0].tel + '<br/>Address : ' + supplyPoints[0].add +'<br/>       ' + supplyPoints[0].url +  '<br/>Tag: ' + supplyPoints[0].tag + '<br/></p>' + '</div>'+'</div>';
+            var infowindow = new google.maps.InfoWindow({content: contentString});
+                marker.addListener('click', function() {infowindow.open(map,marker);});
+    var marker1 = new google.maps.Marker({position: {lat: supplyPoints[1].lat, lng: supplyPoints[1].lng},map: map,});
+            var contentString = '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="firstHeading" class="firstHeading">' + supplyPoints[1].name + '</h1>'+'<div id="bodyContent">'+'<p><b>Rate : ' + supplyPoints[1].rating + '</b><br/>Average Price : ' + supplyPoints[1].avg_exp + '<br/>Tel : ' + supplyPoints[1].tel + '<br/>Address : ' + supplyPoints[1].add +'<br/>       ' + supplyPoints[1].url +  '<br/>Tag: ' + supplyPoints[1].tag + '<br/></p>' + '</div>'+'</div>';
+                var infowindow1 = new google.maps.InfoWindow({
+                  content: contentString
+                });
+                marker1.addListener('click', function() {infowindow1.open(map,marker1);});
+    var marker2 = new google.maps.Marker({position: {lat: supplyPoints[2].lat, lng: supplyPoints[2].lng},map: map,});
+            var contentString = '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="firstHeading" class="firstHeading">' + supplyPoints[2].name + '</h1>'+'<div id="bodyContent">'+'<p><b>Rate : ' + supplyPoints[2].rating + '</b><br/>Average Price : ' + supplyPoints[2].avg_exp + '<br/>Tel : ' + supplyPoints[2].tel + '<br/>Address : ' + supplyPoints[2].add +'<br/>       ' + supplyPoints[2].url +  '<br/>Tag: ' + supplyPoints[2].tag + '<br/></p>' + '</div>'+'</div>';
+                var infowindow2 = new google.maps.InfoWindow({
+                  content: contentString
+                });
+                marker2.addListener('click', function() {infowindow2.open(map,marker2);});
+    var marker3 = new google.maps.Marker({position: {lat: supplyPoints[3].lat, lng: supplyPoints[3].lng},map: map,});
+            var contentString = '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="firstHeading" class="firstHeading">' + supplyPoints[3].name + '</h1>'+'<div id="bodyContent">'+'<p><b>Rate : ' + supplyPoints[3].rating + '</b><br/>Average Price : ' + supplyPoints[3].avg_exp + '<br/>Tel : ' + supplyPoints[3].tel + '<br/>Address : ' + supplyPoints[3].add +'<br/>       ' + supplyPoints[3].url +  '<br/>Tag: ' + supplyPoints[3].tag + '<br/></p>' + '</div>'+'</div>';
+                var infowindow3 = new google.maps.InfoWindow({
+                  content: contentString
+                });
+                marker3.addListener('click', function() {infowindow3.open(map,marker3);});
+    var marker4 = new google.maps.Marker({position: {lat: supplyPoints[4].lat, lng: supplyPoints[4].lng},map: map,});
+            var contentString = '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="firstHeading" class="firstHeading">' + supplyPoints[4].name + '</h1>'+'<div id="bodyContent">'+'<p><b>Rate : ' + supplyPoints[4].rating + '</b><br/>Average Price : ' + supplyPoints[4].avg_exp + '<br/>Tel : ' + supplyPoints[4].tel + '<br/>Address : ' + supplyPoints[4].add +'<br/>       ' + supplyPoints[4].url +  '<br/>Tag: ' + supplyPoints[4].tag + '<br/></p>' + '</div>'+'</div>';
+                var infowindow4 = new google.maps.InfoWindow({
+                  content: contentString
+                });
+                marker4.addListener('click', function() {infowindow4.open(map,marker4);});
+    var marker5 = new google.maps.Marker({position: {lat: supplyPoints[5].lat, lng: supplyPoints[5].lng},map: map,});
+            var contentString = '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="firstHeading" class="firstHeading">' + supplyPoints[5].name + '</h1>'+'<div id="bodyContent">'+'<p><b>Rate : ' + supplyPoints[5].rating + '</b><br/>Average Price : ' + supplyPoints[5].avg_exp + '<br/>Tel : ' + supplyPoints[5].tel + '<br/>Address : ' + supplyPoints[5].add +'<br/>       ' + supplyPoints[5].url +  '<br/>Tag: ' + supplyPoints[5].tag + '<br/></p>' + '</div>'+'</div>';
+                var infowindow5 = new google.maps.InfoWindow({
+                  content: contentString
+                });
+                marker5.addListener('click', function() {infowindow5.open(map,marker5);});
+    var marker6 = new google.maps.Marker({position: {lat: supplyPoints[6].lat, lng: supplyPoints[6].lng},map: map,});
+            var contentString = '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="firstHeading" class="firstHeading">' + supplyPoints[6].name + '</h1>'+'<div id="bodyContent">'+'<p><b>Rate : ' + supplyPoints[6].rating + '</b><br/>Average Price : ' + supplyPoints[6].avg_exp + '<br/>Tel : ' + supplyPoints[6].tel + '<br/>Address : ' + supplyPoints[6].add +'<br/>       ' + supplyPoints[6].url +  '<br/>Tag: ' + supplyPoints[6].tag + '<br/></p>' + '</div>'+'</div>';
+                var infowindow6 = new google.maps.InfoWindow({
+                  content: contentString
+                });
+                marker6.addListener('click', function() {infowindow6.open(map,marker6);});
+    var marker7 = new google.maps.Marker({position: {lat: supplyPoints[7].lat, lng: supplyPoints[7].lng},map: map,});
+            var contentString = '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="firstHeading" class="firstHeading">' + supplyPoints[7].name + '</h1>'+'<div id="bodyContent">'+'<p><b>Rate : ' + supplyPoints[7].rating + '</b><br/>Average Price : ' + supplyPoints[7].avg_exp + '<br/>Tel : ' + supplyPoints[7].tel + '<br/>Address : ' + supplyPoints[7].add +'<br/>       ' + supplyPoints[7].url +  '<br/>Tag: ' + supplyPoints[7].tag + '<br/></p>' + '</div>'+'</div>';
+                var infowindow7 = new google.maps.InfoWindow({
+                  content: contentString
+                });
+                marker7.addListener('click', function() {infowindow7.open(map,marker7);});
+    var marker8 = new google.maps.Marker({position: {lat: supplyPoints[8].lat, lng: supplyPoints[8].lng},map: map,});
+            var contentString = '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="firstHeading" class="firstHeading">' + supplyPoints[8].name + '</h1>'+'<div id="bodyContent">'+'<p><b>Rate : ' + supplyPoints[8].rating + '</b><br/>Average Price : ' + supplyPoints[8].avg_exp + '<br/>Tel : ' + supplyPoints[8].tel + '<br/>Address : ' + supplyPoints[8].add +'<br/>       ' + supplyPoints[8].url +  '<br/>Tag: ' + supplyPoints[8].tag + '<br/></p>' + '</div>'+'</div>';
+                var infowindow8 = new google.maps.InfoWindow({
+                  content: contentString
+                });
+                marker8.addListener('click', function() {infowindow8.open(map,marker8);});
+    var marker9 = new google.maps.Marker({position: {lat: supplyPoints[9].lat, lng: supplyPoints[9].lng},map: map,});
+            var contentString = '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="firstHeading" class="firstHeading">' + supplyPoints[8].name + '</h1>'+'<div id="bodyContent">'+'<p><b>Rate : ' + supplyPoints[9].rating + '</b><br/>Average Price : ' + supplyPoints[9].avg_exp + '<br/>Tel : ' + supplyPoints[9].tel + '<br/>Address : ' + supplyPoints[9].add +'<br/>       ' + supplyPoints[9].url +  '<br/>Tag: ' + supplyPoints[9].tag + '<br/></p>' + '</div>'+'</div>';
+                var infowindow9 = new google.maps.InfoWindow({
+                  content: contentString
+                });
+                marker9.addListener('click', function() {infowindow9.open(map,marker9);});
+     }
+ else{   //do nothing 
+ }    
+    for(i=0;i<uphillBumpyArray.length;i++){
+         new google.maps.Polyline({
+          path: uphillBumpyArray[i],
+          geodesic: false,
+          strokeColor: 'red',
+          strokeOpacity: 2.0,
+          strokeWeight: 8
+        }).setMap(map);
+    };
+     for(i=0;i<downhillGentleArray.length;i++){
+        new google.maps.Polyline({
+          path: downhillGentleArray[i],
+          geodesic: false,
+          strokeColor: 'green',
+          strokeOpacity: 2.0,
+          strokeWeight: 3
+        }).setMap(map);
+    };
+    for(i=0;i<uphillGentleArray.length;i++){
+         new google.maps.Polyline({
+          path: uphillGentleArray[i],
+          geodesic: false,
+          strokeColor: 'red',
+          strokeOpacity: 2.0,
+          strokeWeight: 3
+        }).setMap(map);
+    };
+    for(i=0;i<flatBumpyArray.length;i++){
+         new google.maps.Polyline({
+          path: flatBumpyArray[i],
+          geodesic: false,
+          strokeColor: 'blue',
+          strokeOpacity: 2.0,
+          strokeWeight: 8
+             
+        }).setMap(map);
+    };
+    for(i=0;i<flatGentleArray.length;i++){
+          new google.maps.Polyline({
+          path: flatGentleArray[i],
+          geodesic: false,
+          strokeColor: 'blue',
+          strokeOpacity: 2.0,
+          strokeWeight: 3
+        }).setMap(map);
+    };
+    for(i=0;i<downhillBumpyArray.length;i++){
+         new google.maps.Polyline({
+          path: downhillBumpyArray[i],
+          geodesic: false,
+          strokeColor: 'green',
+          strokeOpacity: 2.0,
+          strokeWeight: 8
+        }).setMap(map);
+    };
+ 
+  };  
+</script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyANocTulrHL4jxdtn3RH7UVnDWkIZ-wXnM&callback=initMap" async defer>
+    </script>
+    <script>
+        playVoice();
+function playVoice()  
+    {  
+      var borswer = window.navigator.userAgent.toLowerCase();  
+      if(borswer.indexOf( "ie" ) >= 0)  
+      { 
+          switch (temp.Motion_Label+temp.Bumpy_Label) {
+                case 1:
+                    {
+                        var strEmbed = '<embed name="embedPlay" src= "{% static 'music/1.mp3' %}"  autostart="true" hidden="true" loop="false"></embed>';  
+                        if ($("body").find("embed").length <= 0){  
+                            $("body").append(strEmbed);  
+                        }  
+                       var embed = document.embedPlay;  
+                        embed.volume = 100;
+                    }
+                    break;
+                case 2:
+                    {
+                        var strEmbed = '<embed name="embedPlay" src= "{% static 'music/2.mp3' %}"  autostart="true" hidden="true" loop="false"></embed>';  
+                        if ($("body").find("embed").length <= 0){  
+                            $("body").append(strEmbed);  
+                        }  
+                       var embed = document.embedPlay;  
+                        embed.volume = 100;
+                    }
+                    break;
+                case 3:
+                    {
+                        var strEmbed = '<embed name="embedPlay" src= "{% static 'music/3.mp3' %}"  autostart="true" hidden="true" loop="false"></embed>';  
+                        if ($("body").find("embed").length <= 0){  
+                            $("body").append(strEmbed);  
+                        }  
+                       var embed = document.embedPlay;  
+                        embed.volume = 100;
+                    }
+                    break;
+                case 4:
+                    {
+                        var strEmbed = '<embed name="embedPlay" src= "{% static 'music/4.mp3' %}"  autostart="true" hidden="true" loop="false"></embed>';  
+                        if ($("body").find("embed").length <= 0){  
+                            $("body").append(strEmbed);  
+                        }  
+                       var embed = document.embedPlay;  
+                        embed.volume = 100;
+                    }
+                    break;
+                case 5:
+                    {
+                        var strEmbed = '<embed name="embedPlay" src= "{% static 'music/5.mp3' %}"  autostart="true" hidden="true" loop="false"></embed>';  
+                        if ($("body").find("embed").length <= 0){  
+                            $("body").append(strEmbed);  
+                        }  
+                       var embed = document.embedPlay;  
+                        embed.volume = 100;
+                    }
+                    break;
+                case 6:
+                    {
+                        var strEmbed = '<embed name="embedPlay" src= "{% static 'music/6.mp3' %}"  autostart="true" hidden="true" loop="false"></embed>';  
+                        if ($("body").find("embed").length <= 0){  
+                            $("body").append(strEmbed);  
+                        }  
+                       var embed = document.embedPlay;  
+                        embed.volume = 100;
+                    }
+                    break;
+                default :
+                    break;
+            }  
+      }
+        else{  
+          switch (temp.Motion_Label+temp.Bumpy_Label) {
+                case 1:
+                    {
+                        var strAudio = '<audio id="audioPlay" src= "{% static 'music/1.mp3' %}"  hidden="true">';  
+                        if($("body").find("audio").length <= 0){  
+                         $("body").append(strAudio);  
+                        }  
+                        var audio = document.getElementById("audioPlay");  
+                        audio.play(); 
+                    }
+                    break;
+                case 2:
+                    {
+                        var strAudio = '<audio id="audioPlay" src= "{% static 'music/2.mp3' %}"  hidden="true">';  
+                        if($("body").find("audio").length <= 0){  
+                         $("body").append(strAudio);  
+                        }  
+                        var audio = document.getElementById("audioPlay");  
+                        audio.play(); 
+                    }
+                    break;
+                case 3:
+                    {
+                        var strAudio = '<audio id="audioPlay" src= "{% static 'music/3.mp3' %}"  hidden="true">';  
+                        if($("body").find("audio").length <= 0){  
+                         $("body").append(strAudio);  
+                        }  
+                        var audio = document.getElementById("audioPlay");  
+                        audio.play(); 
+                    }
+                    break;
+                case 4:
+                    {
+                        var strAudio = '<audio id="audioPlay" src= "{% static 'music/4.mp3' %}"  hidden="true">';  
+                        if($("body").find("audio").length <= 0){  
+                         $("body").append(strAudio);  
+                        }  
+                        var audio = document.getElementById("audioPlay");  
+                        audio.play(); 
+                    }
+                    break;
+                case 5:
+                    {
+                        var strAudio = '<audio id="audioPlay" src= "{% static 'music/5.mp3' %}"  hidden="true">';  
+                        if($("body").find("audio").length <= 0){  
+                         $("body").append(strAudio);  
+                        }  
+                        var audio = document.getElementById("audioPlay");  
+                        audio.play(); 
+                    }
+                    break;
+                case 6:
+                    {
+                        var strAudio = '<audio id="audioPlay" src= "{% static 'music/6.mp3' %}"  hidden="true">';  
+                        if($("body").find("audio").length <= 0){  
+                         $("body").append(strAudio);  
+                        }  
+                        var audio = document.getElementById("audioPlay");  
+                        audio.play(); 
+                    }
+                    break;
+                default :
+                    break;
+            }  
+      }  
+    };
+    </script>
+</body>
+    </html>
